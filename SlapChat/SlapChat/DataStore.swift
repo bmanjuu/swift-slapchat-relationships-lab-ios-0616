@@ -12,6 +12,7 @@ import CoreData
 class DataStore {
     
     var messages:[Message] = []
+    var recipients:[Recipient] = []
     
     static let sharedDataStore = DataStore()
     
@@ -38,6 +39,7 @@ class DataStore {
         var error:NSError? = nil
         
         let messagesRequest = NSFetchRequest(entityName: "Message")
+        let recipientRequest = NSFetchRequest(entityName: "Recipient")
         
         let createdAtSorter = NSSortDescriptor(key: "createdAt", ascending:true)
         
@@ -45,12 +47,14 @@ class DataStore {
         
         do{
             messages = try managedObjectContext.executeFetchRequest(messagesRequest) as! [Message]
+            recipients = try managedObjectContext.executeFetchRequest(recipientRequest) as! [Recipient]
         }catch let nserror1 as NSError{
             error = nserror1
             messages = []
+            recipients = []
         }
         
-        if messages.count == 0 {
+        if messages.count == 0 || recipients.count == 0 {
             generateTestData()
         }
         
@@ -73,6 +77,17 @@ class DataStore {
         
         messageThree.content = "Message 3"
         messageThree.createdAt = NSDate()
+        
+        let recipientOne: Recipient = NSEntityDescription.insertNewObjectForEntityForName("Recipient", inManagedObjectContext: managedObjectContext) as! Recipient
+        
+        recipientOne.name = "Betty"
+        recipientOne.messages = [messageOne, messageTwo]
+        
+        let recipientTwo: Recipient = NSEntityDescription.insertNewObjectForEntityForName("Recipient", inManagedObjectContext: managedObjectContext) as! Recipient
+        
+        recipientTwo.name = "Alice"
+        recipientTwo.messages = [messageThree]
+            
         
         saveContext()
         fetchData()

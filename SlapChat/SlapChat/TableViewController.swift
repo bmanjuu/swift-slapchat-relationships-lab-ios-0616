@@ -10,7 +10,7 @@ import UIKit
 
 class TableViewController: UITableViewController {
 
-    
+    //public var recipientMessages : Message?
     var managedMessageObjects: [Message] = []
     let store: DataStore = DataStore()
     
@@ -51,14 +51,14 @@ class TableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return store.messages.count
+        return managedMessageObjects.count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("basicCell", forIndexPath: indexPath)
         
-        let eachMessage = store.messages[indexPath.row]
+        let eachMessage = managedMessageObjects[indexPath.row]
         
         cell.textLabel?.text = eachMessage.content
         
